@@ -1,0 +1,12 @@
+.navBar {
+	background-color: #fff;
+	color: #333;
+}
+.title {
+	flex-grow: 1;
+	text-align: center;
+}
+.link {
+	text-decoration: none;
+	color: white;
+}
