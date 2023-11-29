@@ -22,16 +22,20 @@ const Navigation = ({ user, setUser }) => {
 		<AppBar position="static" className={"navBar mb-3"}>
 			<Toolbar>
 				{!user && (
-					<Typography variant="h6" className={"title text-center"}>
+					<Typography variant="h4" className={"title text-center fw-bold"}>
 						<NavLink to="/" className={"link"} style={{ color: "white" }}>
-							Login
+							TA Management
 						</NavLink>
 					</Typography>
 				)}
 				{user && user.role === "TA Committee Member" && (
 					<>
 						<Typography variant="h6" className={"title text-center"}>
-							<NavLink to="/feedbacks" className={"link"} style={{ color: "white" }}>
+							<NavLink
+								to="/feedbacks"
+								className={"link"}
+								style={{ color: "white" }}
+							>
 								Feedbacks
 							</NavLink>
 						</Typography>
@@ -50,7 +54,11 @@ const Navigation = ({ user, setUser }) => {
 							</NavLink>
 						</Typography>
 						<Typography variant="h6" className={"title text-center"}>
-							<NavLink to="/feedback" className={"link"} style={{ color: "white" }}>
+							<NavLink
+								to="/feedback"
+								className={"link"}
+								style={{ color: "white" }}
+							>
 								Fill Feedback
 							</NavLink>
 						</Typography>
@@ -82,7 +90,11 @@ const Navigation = ({ user, setUser }) => {
 							</NavLink>
 						</Typography>
 						<Typography variant="h6" className={"title text-center"}>
-							<NavLink to="/feedbacks" className={"link"} style={{ color: "white" }}>
+							<NavLink
+								to="/feedbacks"
+								className={"link"}
+								style={{ color: "white" }}
+							>
 								Feedbacks
 							</NavLink>
 						</Typography>
