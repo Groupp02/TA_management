@@ -3,7 +3,10 @@
 	justify-content: center;
 	align-items: center;
 	/* background: #f0f2f5; */
-  background: url("../utils/Images/LoginBackground.png");
+  background: url("../utils/Images/LoginBackground.jpg");
+	background-position: bottom;
+	background-repeat: no-repeat;
+	background-size: cover;
 }
 .login-container {
 	display: flex;
@@ -16,4 +19,5 @@
 .login-heading {
 	position: absolute;
 	top: 0;
+	text-shadow: 2px 2px 10px white;
 }
