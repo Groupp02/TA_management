@@ -1,11 +1,14 @@
 import {
+	Box,
 	Button,
+	Chip,
 	CircularProgress,
 	Container,
 	Paper,
 	Table,
 	TableBody,
 	TableCell,
+	TableContainer,
 	TableHead,
 	TableRow,
 	Typography,
@@ -46,7 +49,7 @@ const TAList = () => {
 		const newApps = [];
 		apps.forEach((app) => {
 			app.status.split(",").forEach((status, index) => {
-				if (status === "Pending") {
+				if (status === "Pending" || status === "Reviewing") {
 					newApps.push({
 						...app,
 						eligibleCourses: app.eligibleCourses.split(",")[index],
@@ -83,12 +86,11 @@ const TAList = () => {
 
 	const handleApprove = async (aIndex, index) => {
 		try {
-			const response = await axios.post("/api/application/changeStatus", {
+			await axios.post("/api/application/changeStatus", {
 				newStatus: "Reviewing",
 				appId: applications[aIndex]._id,
 				index: index,
 			});
-			console.log(response.data);
 			approveApplication(aIndex, index);
 			alert("Application sent to TA committee!");
 		} catch (error) {
@@ -105,62 +107,89 @@ const TAList = () => {
 	}
 
 	return (
-		<Container>
-			<Typography variant="h4" sx={{ mb: 2 }} className="text-center">
-				TA Applications
-			</Typography>
+		<Box className="px-5 mb-4">
 			<Paper elevation={3} className="p-3">
 				{applications.length === 0 ? (
-					<Typography className="mt-5 text-center">
+					<Typography variant="h5" className="fw-bold mt-5 text-center">
 						No Applications to review
 					</Typography>
 				) : (
-					<Table>
-						<TableHead>
-							<TableRow>
-								<TableCell>Username</TableCell>
-								<TableCell>Name</TableCell>
-								<TableCell>Email</TableCell>
-								<TableCell>Phone Number</TableCell>
-								<TableCell>Previous Courses</TableCell>
-								<TableCell>Eligible Courses</TableCell>
-								<TableCell>Resume</TableCell>
-								<TableCell></TableCell>
-							</TableRow>
-						</TableHead>
-						<TableBody>
-							{applications.map((applicant, aIndex) => (
-								<TableRow key={aIndex}>
-									<TableCell>{applicant.username}</TableCell>
-									<TableCell>{applicant.name}</TableCell>
-									<TableCell>{applicant.email}</TableCell>
-									<TableCell>{applicant.phoneNumber}</TableCell>
-									<TableCell>{applicant.previousCourses}</TableCell>
-									<TableCell><strong>{applicant.eligibleCourses}</strong></TableCell>
-									<TableCell>
-										<Button
-											type="a"
-											onClick={() => downloadFile(applicant.resume)}
-										>
-											Download Resume
-										</Button>
+					<TableContainer component={Paper}>
+						<Table>
+							<TableHead>
+								<TableRow>
+									<TableCell className="fs-4" style={{ fontFamily: "Dhurjati" }}>
+										Name (username)
 									</TableCell>
-									<TableCell>
-										<Button
-											variant="contained"
-											color="primary"
-											onClick={() => handleApprove(aIndex, applicant.index)}
-										>
-											Reviewed
-										</Button>
+									<TableCell className="fs-4" style={{ fontFamily: "Dhurjati" }}>
+										Email
 									</TableCell>
+									<TableCell className="fs-4" style={{ fontFamily: "Dhurjati" }}>
+										Phone Number
+									</TableCell>
+									<TableCell className="fs-4" style={{ fontFamily: "Dhurjati" }}>
+										Previous Courses
+									</TableCell>
+									<TableCell className="fs-4" style={{ fontFamily: "Dhurjati" }}>
+										Eligible Courses
+									</TableCell>
+									<TableCell className="fs-4" style={{ fontFamily: "Dhurjati" }}>
+										Resume
+									</TableCell>
+									<TableCell></TableCell>
 								</TableRow>
-							))}
-						</TableBody>
-					</Table>
+							</TableHead>
+							<TableBody>
+								{applications.map((applicant, aIndex) => (
+									<TableRow key={aIndex}>
+										<TableCell>{applicant.name} <span className="fst-italic">({applicant.username})</span></TableCell>
+										<TableCell>{applicant.email}</TableCell>
+										<TableCell>{applicant.phoneNumber}</TableCell>
+										<TableCell>
+											{applicant.previousCourses
+												?.split(",")
+												.map((course, index) => (
+													<Chip
+														key={index}
+														label={course}
+														className="course-chip fw-bold"
+													/>
+												))}
+										</TableCell>
+										<TableCell>
+											<Chip
+												key={aIndex}
+												label={applicant.eligibleCourses}
+												className="course-chip fw-bold"
+												color="secondary"
+											/>
+										</TableCell>
+										<TableCell>
+											<Button
+												type="a"
+												onClick={() => downloadFile(applicant.resume)}
+											>
+												Download Resume
+											</Button>
+										</TableCell>
+										<TableCell>
+											<Button
+												variant="contained"
+												color="success"
+												onClick={() => handleApprove(aIndex, applicant.index)}
+												disabled={applicant.status.split(",")[applicant.index] === "Reviewing"}
+											>
+												Reviewed
+											</Button>
+										</TableCell>
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+					</TableContainer>
 				)}
 			</Paper>
-		</Container>
+		</Box>
 	);
 };
 

@@ -7,6 +7,7 @@ import {
 	Chip,
 	Grid,
 	Button,
+	CircularProgress,
 } from "@mui/material";
 import axios from "axios";
 
@@ -30,12 +31,11 @@ const ApplicationCard = ({ appData, setApplication, index }) => {
 
 	const acceptApplicationHandler = async () => {
 		try {
-			const response = await axios.post("/api/application/changeStatus", {
+			await axios.post("/api/application/changeStatus", {
 				newStatus: "Accepted",
 				appId: appData.applicationId,
-				index: index,
+				index: appData.index,
 			});
-			console.log(response.data);
 			setApplication(index);
 			alert("Application accepted!");
 		} catch (error) {
@@ -47,15 +47,18 @@ const ApplicationCard = ({ appData, setApplication, index }) => {
 		<Card className="mb-3 shadow">
 			<CardContent>
 				<Grid container alignItems="center" justifyContent="space-between">
-					<Grid item>
+					<Grid item xs>
 						<Typography variant="h6" component="h2">
-							Course: {appData.course}
+							Course: <strong>{appData.course}</strong>
 						</Typography>
+					</Grid>
+					<Grid item xs>
 						<Chip
-							label={appData.status}
+							label={appData.status.toUpperCase()}
 							color={getStatusColor(appData.status)}
-							size="small"
+							size="medium"
 							style={{ marginTop: "10px" }}
+							className="fw-bold"
 						/>
 					</Grid>
 					{appData.status === "Approved" && (
@@ -88,7 +91,9 @@ const StudentApplications = ({ user }) => {
 				response.data.applications.forEach((app) => {
 					app.eligibleCourses.split(",").forEach((course, index) => {
 						apps.push({
+							...app,
 							applicationId: app._id,
+							index,
 							course,
 							status:
 								app.status.split(",").length > 1
@@ -112,21 +117,23 @@ const StudentApplications = ({ user }) => {
 		const newApplications = [...applications];
 		newApplications[index].status = "Accepted";
 		setApplications(newApplications);
-	}
+	};
 
 	if (loading) {
 		return (
-			<Typography variant="h5" className="text-center">
-				Loading...
-			</Typography>
+			<Container className="d-flex justify-content-center align-items-center">
+				<CircularProgress className="mt-5" />
+			</Container>
 		);
 	}
 
 	if (applications.length === 0) {
 		return (
-			<Typography variant="h5" className="text-center">
-				No applications found
-			</Typography>
+			<Container className="d-flex justify-content-center align-items-center">
+				<Typography variant="h5" className="text-center">
+					No applications found
+				</Typography>
+			</Container>
 		);
 	}
 

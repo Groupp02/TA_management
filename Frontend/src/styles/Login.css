@@ -1,7 +1,19 @@
+.login-outer-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	/* background: #f0f2f5; */
+  background: url("../utils/Images/LoginBackground.png");
+}
 .login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: #f0f2f5;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	/* background: #f0f2f5; */
+}
+.login-heading {
+	position: absolute;
+	top: 0;
 }

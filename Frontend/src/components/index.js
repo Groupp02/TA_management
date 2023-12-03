@@ -10,8 +10,12 @@ import Feedback from "./Instructor/Feedback";
 import FeedbackList from "./Instructor/FeedbackList";
 import FeedbackListDS from "./DepartmentStaff/FeedbackListDS";
 import FeedbackListTC from "./TACommittee/FeedbackListTC";
+import NotificationComponent from "./Notifications";
+import FeedbackListStudent from "./Student/FeedbackList";
 
 export {
+	FeedbackListStudent,
+	NotificationComponent,
 	FeedbackListTC,
 	FeedbackListDS,
 	FeedbackList,

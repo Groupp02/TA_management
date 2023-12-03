@@ -4,6 +4,8 @@ import { NavLink } from "react-router-dom";
 import "../styles/Navigation.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Logout } from "@mui/icons-material";
+import NotificationComponent from "./Notifications";
 
 const Navigation = ({ user, setUser }) => {
 	const navigate = useNavigate();
@@ -18,29 +20,37 @@ const Navigation = ({ user, setUser }) => {
 		}
 	};
 
+	if (!user) {
+		return;
+	}
+
 	return (
 		<AppBar position="static" className={"navBar mb-3"}>
 			<Toolbar>
-				{!user && (
-					<Typography variant="h4" className={"title text-center fw-bold"}>
-						<NavLink to="/" className={"link"} style={{ color: "white" }}>
-							TA Management
-						</NavLink>
-					</Typography>
+				{user && (
+					<NotificationComponent user={user} />
 				)}
 				{user && user.role === "TA Committee Member" && (
 					<>
 						<Typography variant="h6" className={"title text-center"}>
 							<NavLink
 								to="/feedbacks"
-								className={"link"}
+								className={({ isActive }) =>
+									isActive ? "link activeNav" : "link"
+								}
 								style={{ color: "white" }}
 							>
 								Feedbacks
 							</NavLink>
 						</Typography>
 						<Typography variant="h6" className={"title text-center"}>
-							<NavLink to="/" className={"link"} style={{ color: "white" }}>
+							<NavLink
+								to="/"
+								className={({ isActive }) =>
+									isActive ? "link activeNav" : "link"
+								}
+								style={{ color: "white" }}
+							>
 								TA Application
 							</NavLink>
 						</Typography>
@@ -49,14 +59,22 @@ const Navigation = ({ user, setUser }) => {
 				{user && user.role === "Instructor" && (
 					<>
 						<Typography variant="h6" className={"title text-center"}>
-							<NavLink to="/" className={"link"} style={{ color: "white" }}>
+							<NavLink
+								to="/"
+								className={({ isActive }) =>
+									isActive ? "link activeNav" : "link"
+								}
+								style={{ color: "white" }}
+							>
 								All Feedbacks
 							</NavLink>
 						</Typography>
 						<Typography variant="h6" className={"title text-center"}>
 							<NavLink
 								to="/feedback"
-								className={"link"}
+								className={({ isActive }) =>
+									isActive ? "link activeNav" : "link"
+								}
 								style={{ color: "white" }}
 							>
 								Fill Feedback
@@ -67,17 +85,36 @@ const Navigation = ({ user, setUser }) => {
 				{user && user.role === "Student" && (
 					<>
 						<Typography variant="h6" className={"title text-center"}>
-							<NavLink to="/" className={"link"} style={{ color: "white" }}>
+							<NavLink
+								to="/"
+								className={({ isActive }) =>
+									isActive ? "link activeNav" : "link"
+								}
+								style={{ color: "white" }}
+							>
 								Applications
 							</NavLink>
 						</Typography>
 						<Typography variant="h6" className={"title text-center"}>
 							<NavLink
 								to="/applications"
-								className={"link"}
+								className={({ isActive }) =>
+									isActive ? "link activeNav" : "link"
+								}
 								style={{ color: "white" }}
 							>
 								TA Application Form
+							</NavLink>
+						</Typography>
+						<Typography variant="h6" className={"title text-center"}>
+							<NavLink
+								to="/feedbacks"
+								className={({ isActive }) =>
+									isActive ? "link activeNav" : "link"
+								}
+								style={{ color: "white" }}
+							>
+								Feedbacks
 							</NavLink>
 						</Typography>
 					</>
@@ -85,14 +122,22 @@ const Navigation = ({ user, setUser }) => {
 				{user && user.role === "Department Staff" && (
 					<>
 						<Typography variant="h6" className={"title text-center"}>
-							<NavLink to="/" className={"link"} style={{ color: "white" }}>
+							<NavLink
+								to="/"
+								className={({ isActive }) =>
+									isActive ? "link activeNav" : "link"
+								}
+								style={{ color: "white" }}
+							>
 								TA Applications
 							</NavLink>
 						</Typography>
 						<Typography variant="h6" className={"title text-center"}>
 							<NavLink
 								to="/feedbacks"
-								className={"link"}
+								className={({ isActive }) =>
+									isActive ? "link activeNav" : "link"
+								}
 								style={{ color: "white" }}
 							>
 								Feedbacks
@@ -101,7 +146,9 @@ const Navigation = ({ user, setUser }) => {
 						<Typography variant="h6" className={"title text-center"}>
 							<NavLink
 								to="/input-new-course"
-								className={"link"}
+								className={({ isActive }) =>
+									isActive ? "link activeNav" : "link"
+								}
 								style={{ color: "white" }}
 							>
 								Input TA Requirement
@@ -114,8 +161,9 @@ const Navigation = ({ user, setUser }) => {
 						<Button
 							onClick={handleLogout}
 							variant="contained"
-							color="secondary"
+							className="fw-bold float-end fs-6 logoutBtn"
 						>
+							<Logout />
 							Logout
 						</Button>
 					</Typography>

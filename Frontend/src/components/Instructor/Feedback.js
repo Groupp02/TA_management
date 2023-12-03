@@ -30,7 +30,6 @@ const FeedbackModal = ({ user, open, onClose }) => {
 				course: user.course,
 				feedback,
 			});
-			console.log(response.data);
 			if (response.status === 201) {
 				alert("Feedback created successfully");
 			} else {
@@ -144,16 +143,18 @@ const Feedback = () => {
 
 	return (
 		<Container>
-			<Typography variant="h4" sx={{ mb: 2 }} className="text-center">
-				Fill Feedback
-			</Typography>
 			{applicants.length === 0 ? (
 				<Typography className="mt-5 text-center">
 					No TAs available yet to give feedback
 				</Typography>
 			) : (
 				applicants.map((item, index) => (
-					<Grid container key={index} className="p-3 border">
+					<Grid
+						container
+						key={index}
+						className="p-3 border shadow mb-3 rounded"
+						style={{ backgroundColor: "white" }}
+					>
 						<Grid xs item>
 							<Box>
 								<Typography>

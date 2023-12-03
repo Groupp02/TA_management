@@ -5,7 +5,6 @@ import {
 	Button,
 	Container,
 	Grid,
-	Typography,
 } from "@mui/material";
 import axios from "axios";
 import "../../styles/TaApplication.css";
@@ -36,7 +35,6 @@ const TaApplication = ({ user }) => {
 		const fetchCourses = async () => {
 			try {
 				const response = await axios.get("/api/req-courses");
-				console.log(response.data);
 				setReqCourse(response.data);
 			} catch (e) {
 				alert("Error fetching courses");
@@ -145,13 +143,12 @@ const TaApplication = ({ user }) => {
 		formData.append("status", pendingStatusArray.join(","));
 
 		try {
-			const response = await axios.post("/api/ta-application", formData, {
+			await axios.post("/api/ta-application", formData, {
 				headers: {
 					"Content-Type": "multipart/form-data",
 				},
 			});
 
-			console.log(response.data);
 			alert("Form submitted successfully!");
 
 			setFileName("");
@@ -171,10 +168,10 @@ const TaApplication = ({ user }) => {
 	};
 
 	return (
-		<Container>
-			<Typography variant="h4" component="h1" className="containerHeading">
+		<Container style={{backgroundColor: "white", borderRadius: "20px"}}>
+			{/* <Typography variant="h4" component="h1" className="containerHeading">
 				TA APPLICATION
-			</Typography>
+			</Typography> */}
 			<Grid container spacing={2} className="mt-4">
 				<Grid
 					item
@@ -204,7 +201,7 @@ const TaApplication = ({ user }) => {
 				addCourse={setEligibleCourses}
 				availableCourses={reqCourse}
 			/>
-			<Box className="mt-4 text-center mb-5">
+			<Box className="mt-4 text-center mb-5 pb-3">
 				<Button
 					variant="contained"
 					color="success"

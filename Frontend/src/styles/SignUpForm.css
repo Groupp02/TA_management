@@ -1,9 +1,22 @@
+.signup-outer-container {
+  display: flex;
+	justify-content: center;
+	align-items: center;
+	/* background: #f0f2f5; */
+  background: url("../utils/Images/LoginBackground.png");
+}
 .signup-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f0f2f5;
+  /* background-color: #f0f2f5; */
+}
+
+.signup-heading {
+	position: absolute;
+	top: 0;
 }
 
 .signup-paper {

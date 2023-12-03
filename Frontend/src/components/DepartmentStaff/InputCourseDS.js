@@ -1,6 +1,7 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Delete } from "@mui/icons-material";
 
 const InputCourseDS = () => {
 	const [courseName, setCourseName] = useState("");
@@ -25,12 +26,23 @@ const InputCourseDS = () => {
 			course: courseName,
 		});
 		setAvailableCourses([...availableCourses, { course: courseName }]);
-		console.log(response.data);
 		alert(response.data.message);
 	};
 
+	const deleteCourse = async (id) => {
+		const response = await axios.post("/api/delete-course", {
+			id: id,
+		});
+		alert(response.data.message);
+		setAvailableCourses(availableCourses.filter((course) => course._id !== id));
+	}
+
 	return (
-		<Container maxWidth="sm">
+		<Container
+			maxWidth="sm"
+			style={{ backgroundColor: "white" }}
+			className="px-5 py-4 shadow rounded mb-5"
+		>
 			<Typography variant="h4" className="text-center mb-3">
 				Input Course
 			</Typography>
@@ -51,9 +63,14 @@ const InputCourseDS = () => {
 			<Box className="mt-4">
 				<Typography variant="h5">Available Courses</Typography>
 				{availableCourses.map((course, index) => (
-					<Typography key={index} variant="subtitle1">
-						{index + 1}. {course.course}
-					</Typography>
+					<Box className="d-flex align-items-center justify-content-between mb-2" key={index}>
+						<Typography key={index} variant="subtitle1">
+							{index + 1}. {course.course}
+						</Typography>
+						<Button variant="contained" className="m-0 p-0" color="error" onClick={() => deleteCourse(course._id)}>
+							<Delete />
+						</Button>
+					</Box>
 				))}
 			</Box>
 		</Container>

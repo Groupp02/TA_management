@@ -10,6 +10,7 @@ const TAApplication = require("./models/TAApplication");
 const User = require("./models/User");
 const ReqCourse = require("./models/ReqCourse");
 const Feedback = require("./models/Feedbacks");
+const Notification = require("./models/Notification");
 require("dotenv").config();
 
 const app = express();
@@ -130,10 +131,7 @@ app.post("/api/ta-application", upload.single("resume"), async (req, res) => {
 	const applicationData = req.body;
 	applicationData.resume = req.file.path;
 
-	console.log(applicationData);
-
 	const application = new TAApplication(applicationData);
-	console.log(application);
 	try {
 		const result = await application.save();
 		res.status(201).json(result);
@@ -188,11 +186,9 @@ app.get("/api/getAcceptedApplications", async (req, res) => {
 		res.status(200).json(acceptedApplications);
 	} catch (error) {
 		console.error("Error fetching accepted applications:", error);
-		res
-			.status(500)
-			.json({
-				error: "An error occurred while fetching accepted applications",
-			});
+		res.status(500).json({
+			error: "An error occurred while fetching accepted applications",
+		});
 	}
 });
 
@@ -200,14 +196,25 @@ app.get("/api/getAcceptedApplications", async (req, res) => {
 app.post("/api/application/changeStatus", async (req, res) => {
 	try {
 		const { newStatus, appId, index } = req.body;
-		console.log({ newStatus, appId, index });
 		const application = await TAApplication.findById(appId);
-		console.log(application.status);
 		const statusArray = application.status.split(",");
 		statusArray[index] = newStatus;
 		const newStatusArray = statusArray.join(",");
 		application.status = newStatusArray;
 		await application.save();
+
+
+		if (newStatus === "Accepted") {
+			const newNotification = new Notification({
+				username: null,
+				user: "Instructor",
+				message: `${application.name} has accepted the TAship offer for ${
+					application.eligibleCourses.split(",")[index]
+				}`,
+				seen: false,
+			});
+			await newNotification.save();
+		}
 
 		res.json({ message: "Status changed successfully", newStatus });
 	} catch (error) {
@@ -221,8 +228,6 @@ app.get("/api/download-resume/:filename", (req, res) => {
 	const filename = req.params.filename;
 	const fileDirectory = path.join(__dirname, "uploads");
 	const filePath = path.join(fileDirectory, filename);
-
-	console.log(filePath);
 
 	if (fs.existsSync(filePath)) {
 		res.setHeader("Content-Disposition", "attachment; filename=" + filename);
@@ -282,6 +287,15 @@ app.post("/api/createFeedback", async (req, res) => {
 
 		await newFeedback.save();
 
+		const newNotification = new Notification({
+			username,
+			user: "Student",
+			message: `You got feedback for the course ${course}`,
+			seen: false,
+		});
+
+		await newNotification.save();
+
 		res.status(201).json({ message: "Feedback created successfully" });
 	} catch (error) {
 		console.error("Error creating feedback:", error);
@@ -302,6 +316,97 @@ app.get("/api/getAllFeedbacks", async (req, res) => {
 		res
 			.status(500)
 			.json({ error: "An error occurred while fetching feedbacks" });
+	}
+});
+
+// Get feedbacks of a student
+app.get("/api/getFeedbacks/:username", async (req, res) => {
+	try {
+		const feedbacks = await Feedback.find({
+			username: req.params.username,
+		});
+
+		res.status(200).json(feedbacks);
+	} catch (error) {
+		console.error("Error fetching feedbacks:", error);
+		res
+			.status(500)
+			.json({ error: "An error occurred while fetching feedbacks" });
+	}
+});
+
+// Create a POST route to delete a course req.
+app.post("/api/delete-course", async (req, res) => {
+	const { id } = req.body;
+
+	try {
+		const result = await ReqCourse.findByIdAndDelete(id);
+
+		if (result) {
+			res.json({ message: "Course deleted successfully" });
+		} else {
+			res.status(404).json({ message: "Course not found" });
+		}
+	} catch (error) {
+		res
+			.status(500)
+			.json({ message: "An error occurred", error: error.message });
+	}
+});
+
+// Add a new notification
+app.post("/api/notifications", async (req, res) => {
+	try {
+		const { username, user, message } = req.body;
+		const newNotification = new Notification({
+			username,
+			user,
+			message,
+			seen: true,
+		});
+		await newNotification.save();
+		res.status(201).json(newNotification);
+	} catch (error) {
+		res.status(500).json({ message: error.message });
+	}
+});
+
+// Delete a notification
+app.delete("/api/notifications/:id", async (req, res) => {
+	try {
+		const deletedNotification = await Notification.findByIdAndDelete(
+			req.params.id
+		);
+		if (!deletedNotification) {
+			return res.status(404).json({ message: "Notification not found" });
+		}
+		res.json({ message: "Notification deleted" });
+	} catch (error) {
+		res.status(500).json({ message: error.message });
+	}
+});
+
+// Get all notifications
+app.get("/api/notifications/:username", async (req, res) => {
+	try {
+		const notifications = await Notification.find({
+			username: req.params.username,
+		});
+		res.json(notifications);
+	} catch (error) {
+		res.status(500).json({ message: error.message });
+	}
+});
+
+// Get all notifications
+app.get("/api/notifications/user/:user", async (req, res) => {
+	try {
+		const notifications = await Notification.find({
+			user: req.params.user,
+		});
+		res.json(notifications);
+	} catch (error) {
+		res.status(500).json({ message: error.message });
 	}
 });
 

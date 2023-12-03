@@ -13,6 +13,7 @@ import {
 	CircularProgress,
 	Chip,
 	Button,
+	Box,
 } from "@mui/material";
 import "../../styles/TaList.css";
 
@@ -48,11 +49,11 @@ const TaList = () => {
 	const storeApplications = (applications) => {
 		const newApps = [];
 		applications.forEach((app) => {
-			app.status.split(",").forEach((status, index) => {
+			app.status?.split(",").forEach((status, index) => {
 				if (status === "Reviewing") {
 					newApps.push({
 						...app,
-						eligibleCourses: app.eligibleCourses.split(",")[index],
+						eligibleCourses: app.eligibleCourses?.split(",")[index],
 						index,
 					});
 				}
@@ -87,12 +88,11 @@ const TaList = () => {
 
 	const handleApprove = async (aIndex, index) => {
 		try {
-			const response = await axios.post("/api/application/changeStatus", {
+			await axios.post("/api/application/changeStatus", {
 				newStatus: "Approved",
 				appId: applications[aIndex]._id,
 				index: index,
 			});
-			console.log(response.data);
 			approveApplication(aIndex, index);
 			alert("Application accepted!");
 		} catch (error) {
@@ -109,10 +109,7 @@ const TaList = () => {
 	}
 
 	return (
-		<Container>
-			<Typography variant="h4" className="mb-3 mt-3">
-				TA Applications
-			</Typography>
+		<Box className="px-5 mx-2 text-center">
 			{applications.length === 0 ? (
 				<Typography className="mt-5 text-center">
 					No Applications for approval
@@ -122,13 +119,13 @@ const TaList = () => {
 					<Table>
 						<TableHead>
 							<TableRow>
-								<TableCell>Name</TableCell>
-								<TableCell>Email</TableCell>
-								<TableCell>Phone Number</TableCell>
-								<TableCell>Joining Date</TableCell>
-								<TableCell>Previous Courses</TableCell>
-								<TableCell>Eligible Courses</TableCell>
-								<TableCell>Resume</TableCell>
+								<TableCell className="fs-4" style={{fontFamily: "Dhurjati"}}>Name</TableCell>
+								<TableCell className="fs-4" style={{fontFamily: "Dhurjati"}}>Email</TableCell>
+								<TableCell className="fs-4" style={{fontFamily: "Dhurjati"}}>Phone Number</TableCell>
+								<TableCell className="fs-4" style={{fontFamily: "Dhurjati"}}>Joining Date</TableCell>
+								<TableCell className="fs-4" style={{fontFamily: "Dhurjati"}}>Previous Courses</TableCell>
+								<TableCell className="fs-4" style={{fontFamily: "Dhurjati"}}>Eligible Courses</TableCell>
+								<TableCell className="fs-4" style={{fontFamily: "Dhurjati"}}>Resume</TableCell>
 								<TableCell></TableCell>
 							</TableRow>
 						</TableHead>
@@ -143,12 +140,12 @@ const TaList = () => {
 									</TableCell>
 									<TableCell>
 										{application.previousCourses
-											.split(",")
+											?.split(",")
 											.map((course, index) => (
 												<Chip
 													key={index}
 													label={course}
-													className="course-chip"
+													className="course-chip fw-bold"
 												/>
 											))}
 									</TableCell>
@@ -156,7 +153,8 @@ const TaList = () => {
 										<Chip
 											key={aIndex}
 											label={application.eligibleCourses}
-											className="course-chip"
+											className="course-chip fw-bold"
+											color="secondary"
 										/>
 									</TableCell>
 									<TableCell>
@@ -170,8 +168,9 @@ const TaList = () => {
 									<TableCell>
 										<Button
 											variant="contained"
-											color="primary"
+											color="success"
 											onClick={() => handleApprove(aIndex, application.index)}
+											className="fw-bold"
 										>
 											Approve
 										</Button>
@@ -182,7 +181,7 @@ const TaList = () => {
 					</Table>
 				</TableContainer>
 			)}
-		</Container>
+		</Box>
 	);
 };
 

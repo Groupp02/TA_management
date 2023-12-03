@@ -15,6 +15,7 @@ import {
 	Feedback,
 	FeedbackListTC,
 	FeedbackListDS,
+	FeedbackListStudent,
 } from "./components";
 import { CircularProgress, Container } from "@mui/material";
 
@@ -63,6 +64,7 @@ const App = () => {
 			{user && user.role === "Student" && (
 				<Routes>
 					<Route path="/applications" element={<TaApplication user={user} />} />
+					<Route path="/feedbacks" element={<FeedbackListStudent user={user} />} />
 					<Route path="*" element={<StudentApplications user={user} />} />
 				</Routes>
 			)}

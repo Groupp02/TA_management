@@ -16,7 +16,7 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 
 const PersonalDetails = ({ personalDetails, onChange }) => {
 	return (
-		<Container className="shadow-sm py-3">
+		<Container className="shadow py-3">
 			<Typography variant="h5" component="h2" className="_heading2">
 				PERSONAL DETAILS
 			</Typography>
@@ -105,7 +105,7 @@ const PreviousTACourses = ({
 	setCheckPreviousCourse,
 }) => {
 	return (
-		<Container className="shadow-sm py-3">
+		<Container className="shadow py-3">
 			<Box className="d-flex align-items-center">
 				<Checkbox
 					checked={checkPreviousCourse}
@@ -147,7 +147,7 @@ const PreviousTACourses = ({
 
 const EligibleCourses = ({ eligibleCourses, onChange, addCourse, availableCourses }) => {
 	return (
-		<Container className="shadow-sm py-3">
+		<Container className="shadow py-3">
 			<Typography variant="h5" component="h2" className="_heading2">
 				ELIGIBLE COURSES
 			</Typography>
@@ -183,7 +183,7 @@ const EligibleCourses = ({ eligibleCourses, onChange, addCourse, availableCourse
 
 const ResumeUploader = ({ onChange, fileName }) => {
 	return (
-		<Container className="shadow-sm py-3">
+		<Container className="shadow py-3">
 			<Typography variant="h5">UPLOAD YOUR RESUME</Typography>
 			<div className="my-3">
 				<input
